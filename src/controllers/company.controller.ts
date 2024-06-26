@@ -1,8 +1,10 @@
 import { CompanyRepository } from '@repositories/company.respository';
 import { Request, Response } from 'express';
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class CompanyController {
-  constructor(private companyRepository: CompanyRepository) {}
+  constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
   async getCompanyList(request: Request, response: Response): Promise<Response> {
     const companiesList = await this.companyRepository.getCompanyList(request.body.tipoEmpresa);

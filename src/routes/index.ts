@@ -1,18 +1,12 @@
 import { AuthController } from '@controllers/auth.controller';
 import { CompanyController } from '@controllers/company.controller';
-import { CompanyRepository } from '@repositories/company.respository';
-import { UserRepository } from '@repositories/interfaces/auth.repository';
-import { EmailSender } from '@services/email';
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
 const router = Router();
 
-const userRepository = new UserRepository();
-const emailSender = new EmailSender();
-const authController = new AuthController(userRepository, emailSender);
-
-const companyRepository = new CompanyRepository();
-const companyController = new CompanyController(companyRepository);
+const authController = container.resolve(AuthController);
+const companyController = container.resolve(CompanyController);
 
 router.post('/login', (request, response) => {
   authController.loginUser(request, response);

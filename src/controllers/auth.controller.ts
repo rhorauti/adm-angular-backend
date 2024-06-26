@@ -2,12 +2,14 @@ import { Request, Response } from 'express';
 import { compare, hash } from 'bcryptjs';
 import JwtHandler from '@services/jwtService';
 import { EmailSender } from '@services/email';
-import { UserRepository } from '@repositories/interfaces/auth.repository';
+import { AuthRepository } from '@repositories/auth.repository';
+import { inject, injectable } from 'tsyringe';
 
+@injectable()
 export class AuthController {
   constructor(
-    private userRepository: UserRepository,
-    private emailSender: EmailSender,
+    @inject('AuthRepository') private authRepository: AuthRepository,
+    @inject('EmailSender') private emailSender: EmailSender,
   ) {}
 
   /**
@@ -18,7 +20,7 @@ export class AuthController {
    * @returns Resposta com o status, mensagem e dados do usuário e token
    */
   async loginUser(request: Request, response: Response): Promise<Response> {
-    const user = await this.userRepository.findUserByEmail(request.body.email);
+    const user = await this.authRepository.findUserByEmail(request.body.email);
     if (!user) {
       return response.status(401).json({
         status: false,
@@ -61,7 +63,10 @@ export class AuthController {
    * @returns Resposta com o status, mensagem e dados do usuário.
    */
   async createNewUser(request: Request, response: Response): Promise<Response> {
-    const userExists = await this.userRepository.findUserByEmail(request.body.email);
+    console.log(request.body);
+    console.log(this.authRepository);
+    const userExists = await this.authRepository.findUserByEmail(request.body.email);
+    console.log(userExists);
     if (userExists) {
       return response.status(401).json({
         status: false,
@@ -69,17 +74,19 @@ export class AuthController {
       });
     } else {
       const hashedPassword = await hash(request.body.password, 10);
-      const newUser = await this.userRepository.createNewUser(
+      const newUser = await this.authRepository.createNewUser(
         request.body.name,
         request.body.email,
         hashedPassword,
       );
+      console.log(newUser);
       if (!newUser) {
         return response.status(500).json({
           status: false,
           message: 'Erro interno do servidor!',
         });
       } else {
+        console.log('entrando no else do !newUser...');
         this.emailSender.sendEmailConfirmationSignUp(newUser);
         return response.status(200).json({
           status: true,
@@ -109,14 +116,14 @@ export class AuthController {
         });
       } else {
         const decodedEmail = decodedUser.email;
-        const user = this.userRepository.findUserByEmail(decodedEmail);
+        const user = this.authRepository.findUserByEmail(decodedEmail);
         if ((await user).emailConfirmed) {
           return response.status(401).json({
             status: false,
             message: 'Usuário já validado anteriormente.',
           });
         } else {
-          this.userRepository.validateEmail(decodedEmail);
+          this.authRepository.validateEmail(decodedEmail);
           return response.status(200).json({
             status: true,
             message: 'Usuário validado com sucesso.',
@@ -127,7 +134,7 @@ export class AuthController {
   }
 
   async getNewEmailValidation(request: Request, response: Response): Promise<Response> {
-    const user = await this.userRepository.findUserByEmail(request.body.email);
+    const user = await this.authRepository.findUserByEmail(request.body.email);
     if (!user) {
       return response.status(401).json({
         status: false,
@@ -152,7 +159,7 @@ export class AuthController {
         });
       } else {
         const decodedEmail = decodedUser.email;
-        const user = this.userRepository.findUserByEmail(decodedEmail);
+        const user = this.authRepository.findUserByEmail(decodedEmail);
         const isSamePassword = await compare(request.body.password, (await user).password);
         if (isSamePassword) {
           return response.status(401).json({
@@ -161,7 +168,7 @@ export class AuthController {
           });
         } else {
           const hashedPassword = await hash(request.body.password, 10);
-          this.userRepository.changePassword(decodedEmail, hashedPassword);
+          this.authRepository.changePassword(decodedEmail, hashedPassword);
           return response.status(200).json({
             status: true,
             message: 'Senha alterada com sucesso.',

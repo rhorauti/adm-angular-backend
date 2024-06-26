@@ -1,5 +1,5 @@
 import { dataSource } from '@migrations/index';
-import { ICompanyDTO, ICompanyDTOExtended } from './interfaces/ICompany';
+import { ICompanyDTO, ICompanyDTOExtended } from '../core/interfaces/ICompany';
 import { Company } from '@models/company';
 
 export class CompanyRepository {
