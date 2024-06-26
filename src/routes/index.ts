@@ -1,6 +1,6 @@
 import { AuthController } from '@controllers/auth.controller';
 import { CompanyController } from '@controllers/company.controller';
-import { Router } from 'express';
+import { NextFunction, Router } from 'express';
 import { container } from 'tsyringe';
 
 const router = Router();

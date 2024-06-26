@@ -1,17 +1,17 @@
 export interface ICompanyDTO {
   id: number;
-  tipo: number;
-  cadastro: string;
-  nome: string;
+  type: number;
+  date: string;
+  name: string;
   email: string;
-  telefone: string;
+  phone: string;
   cnpj: string;
-  logradouro: string;
-  numero: number;
-  complemento: string;
-  bairro: string;
-  cidade: string;
-  uf: string;
+  adress: string;
+  number: number;
+  complement: string;
+  district: string;
+  city: string;
+  state: string;
 }
 
 export interface ICompanyDTOExtended extends ICompanyDTO {

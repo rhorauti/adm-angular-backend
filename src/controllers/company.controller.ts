@@ -7,7 +7,7 @@ export class CompanyController {
   constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
   async getCompanyList(request: Request, response: Response): Promise<Response> {
-    const companiesList = await this.companyRepository.getCompanyList(request.body.tipoEmpresa);
+    const companiesList = await this.companyRepository.getCompanyList();
     companiesList.sort((a, b) => {
       if (a.id > b.id) {
         return -1;
@@ -28,7 +28,10 @@ export class CompanyController {
   }
 
   async addNewCompany(request: Request, response: Response): Promise<Response> {
-    const company = await this.companyRepository.findCompanyByName(request.body.name);
+    const company = await this.companyRepository.findCompanyByName(
+      request.body.name,
+      request.body.type,
+    );
     if (company) {
       return response.status(401).json({
         status: false,
