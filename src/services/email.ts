@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
-import { Users } from '@models/users';
+import { Users } from '@models/auth/users';
 
 export class EmailSender {
   private transporter: nodemailer.Transporter;

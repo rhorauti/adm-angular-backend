@@ -1,22 +1,20 @@
 export interface ICompanyDTO {
-  id: number;
+  idCompany: number;
   type: number;
   date: string;
+  nickname: string;
   name: string;
-  email: string;
-  phone: string;
   cnpj: string;
-  adress: string;
-  number: number;
-  complement: string;
-  district: string;
-  city: string;
-  state: string;
 }
 
-export interface ICompanyDTOExtended extends ICompanyDTO {
-  id: number;
+export interface ITypeDTO {
+  idCompanyType: number;
+  type: number;
 }
+
+// export interface ICompanyDTOExtended extends ICompanyDTO {
+//   idCompany: number;
+// }
 
 export interface IResponseCompany {
   date: string;

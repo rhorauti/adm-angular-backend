@@ -7,9 +7,11 @@ export class CompanyController {
   constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
   async getCompanyList(request: Request, response: Response): Promise<Response> {
-    const companiesList = await this.companyRepository.getCompanyList();
+    const companiesList = await this.companyRepository.getCompanyList(
+      Number(request.params.companyType),
+    );
     companiesList.sort((a, b) => {
-      if (a.id > b.id) {
+      if (a.idCompany > b.idCompany) {
         return -1;
       }
     });
@@ -19,7 +21,9 @@ export class CompanyController {
         message: 'Nenhum registro encontrando!',
       });
     } else {
+      console.log(companiesList);
       return response.status(200).json({
+        date: new Date(),
         status: true,
         message: 'Lista recebida com sucesso!',
         data: companiesList,
@@ -30,7 +34,7 @@ export class CompanyController {
   async addNewCompany(request: Request, response: Response): Promise<Response> {
     const company = await this.companyRepository.findCompanyByName(
       request.body.name,
-      request.body.type,
+      Number(request.params.id),
     );
     if (company) {
       return response.status(401).json({
@@ -38,7 +42,7 @@ export class CompanyController {
         message: `Empresa ${company.name} já existe!`,
       });
     } else {
-      const newCompany = await this.companyRepository.addNewCompany(request.body);
+      const newCompany = await this.companyRepository.saveCompany(request.body);
       if (!newCompany) {
         return response.status(500).json({
           status: false,
@@ -70,7 +74,7 @@ export class CompanyController {
     }
   }
 
-  async deleteCustomer(request: Request, response: Response): Promise<Response> {
+  async deleteCompany(request: Request, response: Response): Promise<Response> {
     const company = await this.companyRepository.findCompanyById(Number(request.params.id));
     if (!company) {
       return response.status(400).json({

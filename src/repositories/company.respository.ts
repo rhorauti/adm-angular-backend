@@ -1,29 +1,50 @@
 import { dataSource } from '@migrations/index';
-import { ICompanyDTO, ICompanyDTOExtended } from '../core/interfaces/ICompany';
-import { Company } from '@models/company';
+import { ICompanyDTO, ITypeDTO } from '../core/interfaces/ICompany';
+import { Company } from '@models/company/company';
+import { CompanyType } from '@models/company/companyType';
 
 export class CompanyRepository {
   private companyRepository = dataSource.getRepository(Company);
+  private companyTypeRepository = dataSource.getRepository(CompanyType);
+
+  async getCompanyList(companyType: number): Promise<Company[]> {
+    return await this.companyRepository
+      .createQueryBuilder('company')
+      .innerJoinAndSelect('company.companyType', 'companyType')
+      .where('companyType.idCompanyType = :companyTypeId', { companyTypeId: companyType })
+      .getMany();
+    }
+
+    // async getCompanyList(idCompanyType: number): Promise<Company[]> {
+  //   return await this.companyRepository
+  //     .createQueryBuilder('company')
+  //     .select([
+  //       'company.idCompany',
+  //       'company.date',
+  //       'company.nickname',
+  //       'company.name',
+  //       'company.cnpj',
+  //       'companyType.name',
+  //     ])
+  //     .innerJoinAndSelect('company.companyType', 'companyType')
+  //     .where('companyType.id_Company = :idType', { idType: idCompanyType })
+  //     .getMany();
+  // }
 
   async findCompanyByName(name: string, type: number): Promise<Company> {
-    return await this.companyRepository.findOne({
-      where: {
-        name: name,
-        type: type,
-      },
-    });
+    const companyList = await this.getCompanyList(type);
+    return companyList.find(company => company.name == name);
   }
 
-  async findCompanyById(id: number): Promise<Company> {
-    return await this.companyRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  async getCompanyList(): Promise<Company[]> {
-    return await this.companyRepository.find();
+  async findCompanyById(id: number, type: number): Promise<Company> {
+    const companyList = await this.getCompanyList(type);
+    return companyList.find(company => company.idCompany == id);
+    // return await this.companyRepository.findOne({
+    //   where: {
+    //     idCompany: id,
+    //     type: type,
+    //   },
+    // });
   }
 
   /**
@@ -31,29 +52,15 @@ export class CompanyRepository {
    * Adiciona uma nova empresa no banco de dados
    * @param companyData Objeto com os dados da empresa que será cadatrado.
    */
-  async addNewCompany(companyData: ICompanyDTO): Promise<Company> {
-    if (companyData.id) {
-      delete companyData.id;
+  async saveCompany(data: ICompanyDTO | ITypeDTO): Promise<Company | CompanyType> {
+    if ('idCompany' in data) {
+      return await this.companyRepository.save(data);
+    } else {
+      return await this.companyTypeRepository.save(data);
     }
-    const newCompany = this.companyRepository.create(companyData);
-    return this.companyRepository.save(newCompany);
-  }
-
-  async updateCompany(companyData: ICompanyDTOExtended, companyId: string): Promise<void> {
-    await this.companyRepository
-      .createQueryBuilder()
-      .update(Company)
-      .set(companyData)
-      .where('id = :id', { id: companyId })
-      .execute();
   }
 
   async deleteCompany(companyId: string): Promise<void> {
-    await this.companyRepository
-      .createQueryBuilder()
-      .delete()
-      .from(Company)
-      .where('id = :id', { id: companyId })
-      .execute();
+    await this.companyRepository.delete(companyId);
   }
 }

@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateCompanyTable1718214462553 implements MigrationInterface {
+export class CreateProjectTable1720647957624 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(
+    queryRunner.createTable(
       new Table({
-        name: 'Company',
+        name: 'Project',
         columns: [
           {
-            name: 'idCompany',
+            name: 'idProject',
             type: 'int',
             isPrimary: true,
             isGenerated: true,
@@ -19,22 +19,18 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'nickname',
+            name: 'code',
             type: 'char',
-            length: '20',
-            isUnique: true,
+            length: '15',
           },
           {
-            name: 'name',
-            type: 'varchar',
-            length: '100',
-            isUnique: true,
-          },
-          {
-            name: 'cnpj',
+            name: 'product',
             type: 'char',
             length: '20',
-            isUnique: true,
+          },
+          {
+            name: 'startOfProduction',
+            type: 'timestamp',
           },
         ],
       }),
@@ -42,6 +38,6 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('Company');
+    queryRunner.dropTable('Project');
   }
 }

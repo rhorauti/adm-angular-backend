@@ -1,6 +1,6 @@
 import { AuthController } from '@controllers/auth.controller';
 import { CompanyController } from '@controllers/company.controller';
-import { NextFunction, Router } from 'express';
+import { Router } from 'express';
 import { container } from 'tsyringe';
 
 const router = Router();
@@ -28,8 +28,20 @@ router.post('/new-password', (request, response) => {
   authController.resetPassword(request, response);
 });
 
-router.get('company', (request, response) => {
+router.get('/company/:companyType', (request, response) => {
   companyController.getCompanyList(request, response);
+});
+
+router.post('/company/:id', (request, response) => {
+  companyController.addNewCompany(request, response);
+});
+
+router.post('/company/:id', (request, response) => {
+  companyController.updateCompany(request, response);
+});
+
+router.delete('/company/:id', (request, response) => {
+  companyController.deleteCompany(request, response);
 });
 
 export { router };
