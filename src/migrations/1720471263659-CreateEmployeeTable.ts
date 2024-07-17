@@ -14,6 +14,11 @@ export class CreateEmployeeTable1720471263659 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
+            name: 'name',
+            type: 'varchar',
+            length: '50',
+          },
+          {
             name: 'department',
             type: 'char',
             length: '50',
@@ -32,13 +37,13 @@ export class CreateEmployeeTable1720471263659 implements MigrationInterface {
           {
             name: 'deskphone',
             type: 'char',
-            length: '12',
+            length: '20',
             isNullable: true,
           },
           {
             name: 'cellphone',
             type: 'char',
-            length: '12',
+            length: '20',
             isNullable: true,
           },
           {

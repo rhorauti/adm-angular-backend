@@ -18,10 +18,10 @@ export class Employee {
   @Column({ type: 'char', length: 50 })
   email: string;
 
-  @Column({ type: 'char', length: 12 })
+  @Column({ type: 'char', length: 20 })
   deskphone: string;
 
-  @Column({ type: 'char', length: 12 })
+  @Column({ type: 'char', length: 20 })
   cellphone: string;
 
   @ManyToOne(() => Company, company => company.idCompany)
