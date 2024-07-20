@@ -1,5 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Company } from '../company/company';
+import { Address } from '@models/adress/address';
+import { EmployeeContract } from './employeeContract';
+import { EmployeeVacation } from './employeeVacation';
 
 @Entity('Employee')
 export class Employee {
@@ -24,6 +27,15 @@ export class Employee {
   @Column({ type: 'char', length: 20 })
   cellphone: string;
 
-  @ManyToOne(() => Company, company => company.idCompany)
-  id_Company: Company;
+  @ManyToOne(() => Company, company => company.employee)
+  company: Company;
+
+  @OneToOne(() => Address, adress => adress.employee)
+  adress: Address;
+
+  @OneToOne(() => EmployeeContract, employeeContract => employeeContract.employee)
+  employeeContract: EmployeeContract;
+
+  @OneToMany(() => EmployeeVacation, employeeVacation => employeeVacation.employee)
+  employeeVacation: EmployeeVacation;
 }

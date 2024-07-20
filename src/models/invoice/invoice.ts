@@ -1,5 +1,5 @@
 import { Company } from '@models/company/company';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
 
 @Entity('Invoice')
 export class Invoice {
@@ -19,6 +19,7 @@ export class Invoice {
   @Column({ type: 'timestamp' })
   paymentDateActual: Timestamp;
 
-  @ManyToOne(() => Company, company => company.idCompany)
-  id_Company: Company;
+  @ManyToOne(() => Company, company => company.invoice)
+  @JoinColumn({ name: 'id_Company'})
+  company: Company;
 }

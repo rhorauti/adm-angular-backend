@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Project } from './project';
 import { Company } from '@models/company/company';
 
@@ -7,9 +7,11 @@ export class ProjectCompany {
   @PrimaryGeneratedColumn()
   idProjectCompany: number;
 
-  @ManyToOne(() => Project, project => project.idProject)
-  id_Project: Project;
+  @ManyToOne(() => Company, company => company.projectCompany)
+  @JoinColumn({ name: 'id_Company' })
+  company: Company;
 
-  @ManyToOne(() => Company, company => company.idCompany)
-  id_Company: Company;
+  @ManyToOne(() => Project, project => project.projectCompany)
+  @JoinColumn({ name: 'id_Project' })
+  project: Project;
 }

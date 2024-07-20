@@ -15,6 +15,6 @@ export class Production {
   @Column({ type: 'float' })
   productQty: number;
 
-  @ManyToOne(() => Company, company => company.idCompany)
-  id_Company: Company;
+  @ManyToOne(() => Company, company => company.production)
+  company: Company;
 }

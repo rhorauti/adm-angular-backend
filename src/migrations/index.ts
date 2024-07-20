@@ -19,6 +19,7 @@ import { CreateAdressTable1720647166251 } from './1720647166251-CreateAdressTabl
 import { CreateProjectTable1720647957624 } from './1720647957624-CreateProjectTable';
 import { CreateCompanyTypeTable1720716678201 } from './1720716678201-CreateCompanyTypeTable';
 import { CompanyType } from '@models/company/companyType';
+import { ProjectCompany } from '@models/project/project_company';
 
 export const dataSource = new DataSource({
   type: 'mysql',
@@ -41,6 +42,7 @@ export const dataSource = new DataSource({
     Production,
     Project,
     ProjectEvent,
+    ProjectCompany,
     PurchasingOrder,
   ],
   migrations: [

@@ -27,6 +27,6 @@ export class EmployeeVacation {
   @Column({ type: 'varchar', length: 300 })
   comment: string;
 
-  @ManyToOne(() => Employee, employee => employee.idEmployee)
-  id_Employee: Employee;
+  @ManyToOne(() => Employee, employee => employee.employeeVacation)
+  employee: Employee;
 }

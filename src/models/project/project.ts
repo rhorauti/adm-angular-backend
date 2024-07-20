@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { ProjectCompany } from './project_company';
+import { ProjectEvent } from './projectEvent';
 
 @Entity('Project')
 export class Project {
@@ -16,4 +18,10 @@ export class Project {
 
   @Column({ type: 'timestamp' })
   startOfProduction: Timestamp;
+
+  @OneToMany(() => ProjectCompany, projectCompany => projectCompany.project)
+  projectCompany: ProjectCompany;
+
+  @OneToMany(() => ProjectEvent, projectEvent => projectEvent.project)
+  projectEvent: ProjectEvent;
 }

@@ -10,12 +10,19 @@ export class CompanyRepository {
   async getCompanyList(companyType: number): Promise<Company[]> {
     return await this.companyRepository
       .createQueryBuilder('company')
-      .innerJoinAndSelect('company.companyType', 'companyType')
+      .innerJoin('company.companyType', 'companyType')
+      .select([
+        'company.idCompany',
+        'company.date',
+        'company.nickname',
+        'company.name',
+        'company.cnpj',
+      ])
       .where('companyType.idCompanyType = :companyTypeId', { companyTypeId: companyType })
       .getMany();
-    }
+  }
 
-    // async getCompanyList(idCompanyType: number): Promise<Company[]> {
+  // async getCompanyList(idCompanyType: number): Promise<Company[]> {
   //   return await this.companyRepository
   //     .createQueryBuilder('company')
   //     .select([

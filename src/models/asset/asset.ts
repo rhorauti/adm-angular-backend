@@ -1,5 +1,5 @@
 import { Company } from '@models/company/company';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Asset')
 export class Asset {
@@ -18,6 +18,7 @@ export class Asset {
   @Column({ type: 'varchar', length: 300 })
   comment: string;
 
-  @ManyToOne(() => Company, company => company.idCompany)
-  id_Company: Company;
+  @ManyToOne(() => Company, company => company.asset)
+  @JoinColumn({ name: 'id_Company'})
+  company: Company;
 }

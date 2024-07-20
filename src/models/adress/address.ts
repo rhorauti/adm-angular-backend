@@ -28,10 +28,11 @@ export class Address {
   @Column({ type: 'varchar', length: 2 })
   state: string;
 
-  @ManyToOne(() => Company, company => company.idCompany)
+  @ManyToOne(() => Company, company => company.adress)
   @JoinColumn({ name: 'id_Company' })
-  id_Company: Company;
+  company: Company;
 
-  @OneToOne(() => Employee, employee => employee.idEmployee)
-  id_Employee: Employee;
+  @OneToOne(() => Employee, employee => employee.adress)
+  @JoinColumn({ name: 'id_Employee' })
+  employee: Employee;
 }

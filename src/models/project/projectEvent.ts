@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Project } from './project';
 
 @Entity('ProjectEvent')
 export class ProjectEvent {
@@ -22,4 +23,8 @@ export class ProjectEvent {
 
   @Column({ type: 'varchar', length: 100 })
   comment: string;
+
+  @ManyToOne(() => Project, project => project.projectEvent)
+  @JoinColumn({ name: 'id_Project' })
+  project: Project;
 }

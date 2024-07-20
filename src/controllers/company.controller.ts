@@ -10,18 +10,17 @@ export class CompanyController {
     const companiesList = await this.companyRepository.getCompanyList(
       Number(request.params.companyType),
     );
-    companiesList.sort((a, b) => {
-      if (a.idCompany > b.idCompany) {
-        return -1;
-      }
-    });
     if (!companiesList) {
       return response.status(400).json({
         status: false,
         message: 'Nenhum registro encontrando!',
       });
     } else {
-      console.log(companiesList);
+      companiesList.sort((a, b) => {
+        if (a.idCompany > b.idCompany) {
+          return -1;
+        }
+      });
       return response.status(200).json({
         date: new Date(),
         status: true,
