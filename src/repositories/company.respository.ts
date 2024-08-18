@@ -7,7 +7,7 @@ export class CompanyRepository {
   private companyRepository = dataSource.getRepository(Company);
   private companyTypeRepository = dataSource.getRepository(CompanyType);
 
-  async getCompanyList(companyType: number): Promise<Company[]> {
+  async getAllCompanyRegisters(companyType: number): Promise<Company[]> {
     return await this.companyRepository
       .createQueryBuilder('company')
       .innerJoin('company.companyType', 'companyType')
@@ -18,7 +18,7 @@ export class CompanyRepository {
         'company.name',
         'company.cnpj',
       ])
-      .where('companyType.idCompanyType = :companyTypeId', { companyTypeId: companyType })
+      .where('companyType.type = :type', { type: companyType })
       .getMany();
   }
 
@@ -39,12 +39,12 @@ export class CompanyRepository {
   // }
 
   async findCompanyByName(name: string, type: number): Promise<Company> {
-    const companyList = await this.getCompanyList(type);
+    const companyList = await this.getAllCompanyRegisters(type);
     return companyList.find(company => company.name == name);
   }
 
   async findCompanyById(id: number, type: number): Promise<Company> {
-    const companyList = await this.getCompanyList(type);
+    const companyList = await this.getAllCompanyRegisters(type);
     return companyList.find(company => company.idCompany == id);
     // return await this.companyRepository.findOne({
     //   where: {

@@ -7,9 +7,11 @@ export class CompanyController {
   constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
   async getCompanyList(request: Request, response: Response): Promise<Response> {
-    const companiesList = await this.companyRepository.getCompanyList(
+    console.log(request.params.companyType);
+    const companiesList = await this.companyRepository.getAllCompanyRegisters(
       Number(request.params.companyType),
     );
+    console.log(companiesList);
     if (!companiesList) {
       return response.status(400).json({
         status: false,

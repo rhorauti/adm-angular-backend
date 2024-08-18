@@ -6,8 +6,8 @@ export class CompanyType {
   @PrimaryGeneratedColumn()
   idCompanyType: number;
 
-  @Column({ type: 'char', length: 15 })
-  name: string;
+  @Column({ type: 'int' })
+  type: number;
 
   @ManyToOne(() => Company, company => company.companyType)
   @JoinColumn({ name: 'id_Company' })

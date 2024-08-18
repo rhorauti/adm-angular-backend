@@ -14,9 +14,8 @@ export class CreateCompanyTypeTable1720716678201 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'name',
-            type: 'char',
-            length: '15',
+            name: 'type',
+            type: 'int',
           },
           {
             name: 'id_Company',

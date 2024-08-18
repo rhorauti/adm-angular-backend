@@ -4,7 +4,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.createTable(
       new Table({
-        name: 'Adress',
+        name: 'Address',
         columns: [
           {
             name: 'idAdress',
@@ -19,7 +19,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
             length: '50',
           },
           {
-            name: 'adress',
+            name: 'address',
             type: 'char',
             length: '150',
           },
@@ -63,7 +63,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
     );
 
     queryRunner.createForeignKey(
-      'Adress',
+      'Address',
       new TableForeignKey({
         columnNames: ['id_Company'],
         referencedColumnNames: ['idCompany'],
@@ -73,7 +73,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
     );
 
     queryRunner.createForeignKey(
-      'Adress',
+      'Address',
       new TableForeignKey({
         columnNames: ['id_Employee'],
         referencedColumnNames: ['idEmployee'],
@@ -84,6 +84,6 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('Adress');
+    queryRunner.dropTable('Address');
   }
 }

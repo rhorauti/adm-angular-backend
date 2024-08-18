@@ -28,6 +28,7 @@ export const dataSource = new DataSource({
   username: 'root',
   password: 'Rkazuo4474!',
   database: 'adm',
+  logging: true,
   entities: [
     Company,
     CompanyType,

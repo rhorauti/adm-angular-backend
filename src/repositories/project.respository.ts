@@ -4,7 +4,14 @@ import { Project } from '@models/project/project';
 export class ProjectRepository {
   private projectRepository = dataSource.getRepository(Project);
 
-  async getProjectList(companyId: number): Promise<Project[]> {
+  /**
+   * getAllProjectRegisters
+   *
+   * get list of registeres from database according to companies type (customer, suppliers, my company)
+   * @param companyId number.
+   * @returns Promise<Project[]>
+   */
+  async getAllProjectRegisters(companyId: number): Promise<Project[]> {
     return await this.projectRepository
       .createQueryBuilder()
       .select('project')

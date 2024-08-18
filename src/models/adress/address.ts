@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn
 import { Employee } from '../employee/employee';
 import { Company } from '@models/company/company';
 
-@Entity('Adress')
+@Entity('Address')
 export class Address {
   @PrimaryGeneratedColumn()
   idAddress: number;
