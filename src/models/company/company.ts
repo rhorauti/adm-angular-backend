@@ -24,7 +24,7 @@ export class Company {
   @CreateDateColumn()
   date: Timestamp;
 
-  @Column({ type: 'char', length: 20, unique: true })
+  @Column({ type: 'char', length: 50, unique: true })
   nickname: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -48,7 +48,7 @@ export class Company {
   @OneToMany(() => ProjectCompany, projectCompany => projectCompany.company)
   projectCompany: ProjectCompany;
 
-  @OneToMany(() => Invoice, invoice => invoice.company )
+  @OneToMany(() => Invoice, invoice => invoice.company)
   invoice: Invoice;
 
   @OneToMany(() => Production, production => production.company)

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { compare, hash } from 'bcryptjs';
-import JwtHandler from '@services/jwtService';
-import { EmailSender } from '@services/email';
-import { AuthRepository } from '@repositories/auth.repository';
+import JwtHandler from '@services/jwt.service';
+import { EmailSender } from '@services/email.service';
+import { AuthRepository } from '@repositories/auth/auth.repository';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()

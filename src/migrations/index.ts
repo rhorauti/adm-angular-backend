@@ -1,6 +1,4 @@
 import { DataSource } from 'typeorm';
-import { CreateCompanyTable1718214462553 } from './1718214462553-CreateCompanyTable';
-import { CreateUsersTable1703816465329 } from './1703816465329-CreateUsersTable';
 import { Users } from '@models/auth/users';
 import { Company } from '@models/company/company';
 import { Employee } from '@models/employee/employee';
@@ -14,12 +12,14 @@ import { ProjectEvent } from '@models/project/projectEvent';
 import { PurchasingOrder } from '@models/purchasing-order/purchasingOrder';
 import { Address } from '@models/adress/address';
 import { Asset } from '@models/asset/asset';
-import { CreateEmployeeTable1720471263659 } from './1720471263659-CreateEmployeeTable';
-import { CreateAdressTable1720647166251 } from './1720647166251-CreateAdressTable';
-import { CreateProjectTable1720647957624 } from './1720647957624-CreateProjectTable';
-import { CreateCompanyTypeTable1720716678201 } from './1720716678201-CreateCompanyTypeTable';
 import { CompanyType } from '@models/company/companyType';
 import { ProjectCompany } from '@models/project/project_company';
+import { CreateUsersTable1703816465329 } from './auth/1703816465329-CreateUsersTable';
+import { CreateCompanyTable1718214462553 } from './company/1718214462553-CreateCompanyTable';
+import { CreateEmployeeTable1720471263659 } from './employee/1720471263659-CreateEmployeeTable';
+import { CreateAdressTable1720647166251 } from './address/1720647166251-CreateAdressTable';
+import { CreateProjectTable1720647957624 } from './project/1720647957624-CreateProjectTable';
+import { CreateCompanyTypeTable1720716678201 } from './company/1720716678201-CreateCompanyTypeTable';
 
 export const dataSource = new DataSource({
   type: 'mysql',

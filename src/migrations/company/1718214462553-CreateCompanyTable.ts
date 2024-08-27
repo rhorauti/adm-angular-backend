@@ -21,7 +21,7 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
           {
             name: 'nickname',
             type: 'char',
-            length: '20',
+            length: '50',
             isUnique: true,
           },
           {

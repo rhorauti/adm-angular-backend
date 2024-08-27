@@ -1,6 +1,5 @@
 export interface ICompanyDTO {
   idCompany: number;
-  type: number;
   date: string;
   nickname: string;
   name: string;
@@ -10,11 +9,8 @@ export interface ICompanyDTO {
 export interface ITypeDTO {
   idCompanyType: number;
   type: number;
+  id_Company: number;
 }
-
-// export interface ICompanyDTOExtended extends ICompanyDTO {
-//   idCompany: number;
-// }
 
 export interface IResponseCompany {
   date: string;
