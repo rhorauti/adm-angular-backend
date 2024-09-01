@@ -16,7 +16,7 @@ export class Address {
   @Column({ type: 'int' })
   number: number;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 50, nullable: true })
   complement: string;
 
   @Column({ type: 'char', length: 50 })
@@ -28,11 +28,11 @@ export class Address {
   @Column({ type: 'varchar', length: 2 })
   state: string;
 
-  @ManyToOne(() => Company, company => company.adress)
+  @ManyToOne(() => Company, company => company.adress, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_Company' })
   company: Company;
 
-  @OneToOne(() => Employee, employee => employee.adress)
+  @OneToOne(() => Employee, employee => employee.adress, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_Employee' })
   employee: Employee;
 }

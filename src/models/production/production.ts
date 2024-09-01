@@ -6,15 +6,18 @@ export class Production {
   @PrimaryGeneratedColumn()
   idProduction: number;
 
-  @Column({ type: 'char', length: 20 })
+  @Column({ type: 'char', length: 20, nullable: true })
   lineCode: string;
 
   @Column({ type: 'varchar', length: 30 })
   lineName: string;
 
   @Column({ type: 'float' })
-  productQty: number;
+  productQtyPlan: number;
 
-  @ManyToOne(() => Company, company => company.production)
+  @Column({ type: 'float' })
+  productQtyActual: number;
+
+  @ManyToOne(() => Company, company => company.production, { nullable: true })
   company: Company;
 }

@@ -19,7 +19,9 @@ export class Project {
   @Column({ type: 'timestamp' })
   startOfProduction: Timestamp;
 
-  @OneToMany(() => ProjectCompany, projectCompany => projectCompany.project)
+  @OneToMany(() => ProjectCompany, projectCompany => projectCompany.project, {
+    onDelete: 'CASCADE',
+  })
   projectCompany: ProjectCompany;
 
   @OneToMany(() => ProjectEvent, projectEvent => projectEvent.project)

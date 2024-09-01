@@ -1,6 +1,5 @@
 import { dataSource } from '@migrations/index';
 import { Company } from '@models/company/company';
-import { CompanyType } from '@models/company/companyType';
 import { CompanyRepository } from '@repositories/company/company.respository';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
@@ -11,7 +10,7 @@ export class CompanyController {
   constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
   async getCompanyList(request: Request, response: Response): Promise<Response> {
-    const companiesList = await this.companyRepository.getAllCompanyRegisters(
+    const companiesList = await this.companyRepository.getAllCompanies(
       Number(request.params.companyType),
     );
     if (!companiesList) {
@@ -41,29 +40,46 @@ export class CompanyController {
     try {
       const existingCompany = await queryRunner.manager
         .createQueryBuilder(Company, 'company')
-        .innerJoin('company.companyType', 'companyType')
         .where(
           new Brackets(qb => {
             qb.where('company.nickname = :nickname', { nickname: request.body.nickname }).andWhere(
-              'companyType.type = :type',
-              { type: Number(request.params.companyType) },
+              'company.type = :type',
+              { type: Number(request.body.type) },
             );
           }),
         )
         .orWhere(
           new Brackets(qb => {
             qb.where('company.name = :name', { name: request.body.name }).andWhere(
-              'companyType.type = :type',
-              { type: Number(request.params.companyType) },
+              'company.type = :type',
+              { type: Number(request.body.type) },
             );
           }),
         )
         .orWhere(
           new Brackets(qb => {
             qb.where('company.cnpj = :cnpj', { cnpj: request.body.cnpj }).andWhere(
-              'companyType.type = :type',
-              { type: Number(request.params.companyType) },
+              'company.type = :type',
+              { type: Number(request.body.type) },
             );
+          }),
+        )
+        .orWhere(
+          new Brackets(qb => {
+            qb.where('company.ie = :ie', { ie: request.body.ie })
+              .andWhere('company.type = :type', {
+                type: Number(request.body.type),
+              })
+              .andWhere('company.ie <> ""');
+          }),
+        )
+        .orWhere(
+          new Brackets(qb => {
+            qb.where('company.im = :im', { im: request.body.im })
+              .andWhere('company.type = :type', {
+                type: Number(request.body.type),
+              })
+              .andWhere('company.ie <> ""');
           }),
         )
         .getOne();
@@ -76,6 +92,10 @@ export class CompanyController {
           message += `nome: ${existingCompany.name}`;
         else if (existingCompany.cnpj == request.body.cnpj)
           message += `CNPJ: ${existingCompany.cnpj}`;
+        else if (existingCompany.ie == request.body.ie)
+          message += `Inscrição Estadual: ${existingCompany.ie}`;
+        else if (existingCompany.im == request.body.im)
+          message += `Inscrição Municipal: ${existingCompany.im}`;
         return response.status(401).json({
           status: false,
           message: message,
@@ -85,13 +105,6 @@ export class CompanyController {
       const newCompany = queryRunner.manager.create(Company, request.body);
       const savedCompany = await queryRunner.manager.save(newCompany);
 
-      const newCompanyType = queryRunner.manager.create(CompanyType, {
-        idCompanyType: null,
-        type: Number(request.params.companyType),
-        company: savedCompany,
-      });
-
-      await queryRunner.manager.save(newCompanyType);
       await queryRunner.commitTransaction();
 
       return response.status(200).json({
@@ -112,40 +125,30 @@ export class CompanyController {
   }
 
   async updateCompany(request: Request, response: Response): Promise<Response> {
-    const company = await this.companyRepository.findCompanyByName(
-      request.body.name,
-      Number(request.params.id),
-    );
-    if (company) {
-      const company = await this.companyRepository.saveCompany(request.body);
-      if (!company) {
-        return response.status(500).json({
-          status: false,
-          message: 'Erro interno do servidor!',
-        });
-      } else {
-        return response.status(200).json({
-          status: true,
-          message: `Empresa ${(company as Company).name} alterada com sucesso!`,
-          data: company,
-        });
-      }
+    const idCompany = Number(request.params.idCompany);
+    const company = await this.companyRepository.findCompanyById(idCompany);
+    const companyResponse = await this.companyRepository.saveCompany(request.body);
+    if (!companyResponse) {
+      return response.status(500).json({
+        status: false,
+        message: 'Erro interno do servidor',
+      });
+    } else {
+      return response.status(200).json({
+        status: true,
+        message: `Empresa ${(company as Company).name} alterada com sucesso!`,
+        data: company,
+      });
     }
   }
 
-  // async deleteCompany(request: Request, response: Response): Promise<Response> {
-  //   const company = await this.companyRepository.findCompanyById(Number(request.params.id));
-  //   if (!company) {
-  //     return response.status(400).json({
-  //       status: false,
-  //       message: 'Empresa não encontranda!',
-  //     });
-  //   } else {
-  //     await this.companyRepository.deleteCompany(request.params.id);
-  //     return response.status(200).json({
-  //       status: true,
-  //       message: `Empresa ${company.name} excluida com sucesso!`,
-  //     });
-  //   }
-  // }
+  async deleteCompany(request: Request, response: Response): Promise<Response> {
+    const idCompany = Number(request.params.idCompany);
+    const company = await this.companyRepository.findCompanyById(idCompany);
+    await this.companyRepository.deleteCompany(company);
+    return response.status(200).json({
+      status: true,
+      message: `Empresa ${company.name} excluida com sucesso!`,
+    });
+  }
 }

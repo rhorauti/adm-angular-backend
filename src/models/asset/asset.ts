@@ -9,16 +9,16 @@ export class Asset {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   project: string;
 
-  @Column({ type: 'char', length: 100 })
+  @Column({ type: 'char', length: 100, nullable: true })
   productionLine: string;
 
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   comment: string;
 
-  @ManyToOne(() => Company, company => company.asset)
-  @JoinColumn({ name: 'id_Company'})
+  @ManyToOne(() => Company, company => company.asset, { nullable: true })
+  @JoinColumn({ name: 'id_Company' })
   company: Company;
 }

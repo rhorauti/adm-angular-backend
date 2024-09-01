@@ -1,15 +1,12 @@
 export interface ICompanyDTO {
   idCompany: number;
   date: string;
+  type: number;
   nickname: string;
   name: string;
   cnpj: string;
-}
-
-export interface ITypeDTO {
-  idCompanyType: number;
-  type: number;
-  id_Company: number;
+  ie: string;
+  im: string;
 }
 
 export interface IResponseCompany {

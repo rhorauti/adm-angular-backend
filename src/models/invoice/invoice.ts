@@ -13,13 +13,13 @@ export class Invoice {
   @Column({ type: 'char', length: 10 })
   type: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   paymentDatePlan: Timestamp;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   paymentDateActual: Timestamp;
 
-  @ManyToOne(() => Company, company => company.invoice)
-  @JoinColumn({ name: 'id_Company'})
+  @ManyToOne(() => Company, company => company.invoice, { nullable: true })
+  @JoinColumn({ name: 'id_Company' })
   company: Company;
 }

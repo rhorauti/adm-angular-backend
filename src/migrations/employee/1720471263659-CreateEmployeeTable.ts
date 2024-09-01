@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm
 
 export class CreateEmployeeTable1720471263659 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(
+    await queryRunner.createTable(
       new Table({
         name: 'Employee',
         columns: [
@@ -19,14 +19,22 @@ export class CreateEmployeeTable1720471263659 implements MigrationInterface {
             length: '50',
           },
           {
+            name: 'cpf',
+            type: 'varchar',
+            length: '14',
+            isNullable: true,
+          },
+          {
             name: 'department',
             type: 'char',
             length: '50',
+            isNullable: true,
           },
           {
             name: 'position',
             type: 'char',
             length: '50',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -55,7 +63,7 @@ export class CreateEmployeeTable1720471263659 implements MigrationInterface {
       }),
     );
 
-    queryRunner.createForeignKey(
+    await queryRunner.createForeignKey(
       'Employee',
       new TableForeignKey({
         columnNames: ['id_Company'],
@@ -67,6 +75,6 @@ export class CreateEmployeeTable1720471263659 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('Employee');
+    await queryRunner.dropTable('Employee');
   }
 }

@@ -9,10 +9,10 @@ export class PurchasingOrder {
   @Column({ type: 'float' })
   productQty: number;
 
-  @Column({ type: 'char', length: 30 })
+  @Column({ type: 'char', length: 30, nullable: true })
   paymentCondition: string;
 
-  @ManyToOne(() => Company, company => company.purchasingOrder)
-  @JoinColumn({ name: 'id_Company'})
+  @ManyToOne(() => Company, company => company.purchasingOrder, { nullable: true })
+  @JoinColumn({ name: 'id_Company' })
   company: Company;
 }

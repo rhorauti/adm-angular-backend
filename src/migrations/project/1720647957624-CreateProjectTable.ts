@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export class CreateProjectTable1720647957624 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(
+    await queryRunner.createTable(
       new Table({
         name: 'Project',
         columns: [
@@ -32,12 +32,27 @@ export class CreateProjectTable1720647957624 implements MigrationInterface {
             name: 'startOfProduction',
             type: 'timestamp',
           },
+          {
+            name: 'id_Company',
+            type: 'int',
+            isNullable: true,
+          },
         ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'Project',
+      new TableForeignKey({
+        columnNames: ['id_Company'],
+        referencedColumnNames: ['idCompany'],
+        referencedTableName: 'Company',
+        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('Project');
+    await queryRunner.dropTable('Project');
   }
 }

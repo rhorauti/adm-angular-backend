@@ -7,11 +7,11 @@ export class ProjectCompany {
   @PrimaryGeneratedColumn()
   idProjectCompany: number;
 
-  @ManyToOne(() => Company, company => company.projectCompany)
+  @ManyToOne(() => Company, company => company.projectCompany, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_Company' })
   company: Company;
 
-  @ManyToOne(() => Project, project => project.projectCompany)
+  @ManyToOne(() => Project, project => project.projectCompany, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id_Project' })
   project: Project;
 }

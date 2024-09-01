@@ -12,30 +12,37 @@ export class Employee {
   @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 14, nullable: true })
+  cpf: string;
+
+  @Column({ type: 'char', length: 50, nullable: true })
   department: string;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 50, nullable: true })
   position: string;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 50, nullable: true })
   email: string;
 
-  @Column({ type: 'char', length: 20 })
+  @Column({ type: 'char', length: 20, nullable: true })
   deskphone: string;
 
-  @Column({ type: 'char', length: 20 })
+  @Column({ type: 'char', length: 20, nullable: true })
   cellphone: string;
 
-  @ManyToOne(() => Company, company => company.employee)
+  @ManyToOne(() => Company, company => company.employee, { nullable: true, onDelete: 'CASCADE' })
   company: Company;
 
-  @OneToOne(() => Address, adress => adress.employee)
+  @OneToOne(() => Address, adress => adress.employee, { nullable: true })
   adress: Address;
 
-  @OneToOne(() => EmployeeContract, employeeContract => employeeContract.employee)
+  @OneToOne(() => EmployeeContract, employeeContract => employeeContract.employee, {
+    nullable: true,
+  })
   employeeContract: EmployeeContract;
 
-  @OneToMany(() => EmployeeVacation, employeeVacation => employeeVacation.employee)
+  @OneToMany(() => EmployeeVacation, employeeVacation => employeeVacation.employee, {
+    nullable: true,
+  })
   employeeVacation: EmployeeVacation;
 }

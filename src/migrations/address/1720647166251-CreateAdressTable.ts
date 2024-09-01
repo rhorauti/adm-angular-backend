@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm
 
 export class CreateAdressTable1720647166251 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(
+    await queryRunner.createTable(
       new Table({
         name: 'Address',
         columns: [
@@ -62,7 +62,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
       }),
     );
 
-    queryRunner.createForeignKey(
+    await queryRunner.createForeignKey(
       'Address',
       new TableForeignKey({
         columnNames: ['id_Company'],
@@ -71,19 +71,9 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
         onDelete: 'CASCADE',
       }),
     );
-
-    queryRunner.createForeignKey(
-      'Address',
-      new TableForeignKey({
-        columnNames: ['id_Employee'],
-        referencedColumnNames: ['idEmployee'],
-        referencedTableName: 'Employee',
-        onDelete: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('Address');
+    await queryRunner.dropTable('Address');
   }
 }

@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   Timestamp,
 } from 'typeorm';
-import { CompanyType } from './companyType';
 import { Address } from '@models/adress/address';
 import { Employee } from '@models/employee/employee';
 import { Asset } from '@models/asset/asset';
@@ -24,39 +23,45 @@ export class Company {
   @CreateDateColumn()
   date: Timestamp;
 
-  @Column({ type: 'char', length: 50, unique: true })
+  @Column({ type: 'int' })
+  type: number;
+
+  @Column({ type: 'char', length: 50 })
   nickname: string;
 
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'char', length: 20, unique: true })
+  @Column({ type: 'char', length: 20, nullable: true })
   cnpj: string;
 
-  @OneToMany(() => CompanyType, companyType => companyType.company)
-  companyType: CompanyType[];
+  @Column({ type: 'char', length: 50, nullable: true })
+  ie: string;
 
-  @OneToMany(() => Address, adress => adress.company)
+  @Column({ type: 'char', length: 50, nullable: true })
+  im: string;
+
+  @OneToMany(() => Address, adress => adress.company, { nullable: true })
   adress: Address[];
 
-  @OneToMany(() => Employee, employee => employee.company)
+  @OneToMany(() => Employee, employee => employee.company, { nullable: true })
   employee: Employee;
 
-  @OneToMany(() => Asset, asset => asset.company)
+  @OneToMany(() => Asset, asset => asset.company, { nullable: true })
   asset: Asset;
 
-  @OneToMany(() => ProjectCompany, projectCompany => projectCompany.company)
+  @OneToMany(() => ProjectCompany, projectCompany => projectCompany.company, { nullable: true })
   projectCompany: ProjectCompany;
 
-  @OneToMany(() => Invoice, invoice => invoice.company)
+  @OneToMany(() => Invoice, invoice => invoice.company, { nullable: true })
   invoice: Invoice;
 
-  @OneToMany(() => Production, production => production.company)
+  @OneToMany(() => Production, production => production.company, { nullable: true })
   production: Production;
 
-  @OneToMany(() => Product, product => product.company)
+  @OneToMany(() => Product, product => product.company, { nullable: true })
   product: Product;
 
-  @OneToMany(() => PurchasingOrder, purchasingOrder => purchasingOrder.company)
+  @OneToMany(() => PurchasingOrder, purchasingOrder => purchasingOrder.company, { nullable: true })
   purchasingOrder: PurchasingOrder;
 }

@@ -15,12 +15,12 @@ companyRoute.post(`/${version}/company/:companyType`, (request, response) => {
   companyController.addNewCompany(request, response);
 });
 
-companyRoute.put(`/${version}/company/:id`, (request, response) => {
+companyRoute.put(`/${version}/company/:idCompany`, (request, response) => {
   companyController.updateCompany(request, response);
 });
 
-// companyRoute.delete(`/${version}/company/:id`, (request, response) => {
-//   companyController.deleteCompany(request, response);
-// });
+companyRoute.delete(`/${version}/company/:idCompany`, (request, response) => {
+  companyController.deleteCompany(request, response);
+});
 
 export { companyRoute };

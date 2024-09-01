@@ -12,14 +12,12 @@ import { ProjectEvent } from '@models/project/projectEvent';
 import { PurchasingOrder } from '@models/purchasing-order/purchasingOrder';
 import { Address } from '@models/adress/address';
 import { Asset } from '@models/asset/asset';
-import { CompanyType } from '@models/company/companyType';
 import { ProjectCompany } from '@models/project/project_company';
 import { CreateUsersTable1703816465329 } from './auth/1703816465329-CreateUsersTable';
 import { CreateCompanyTable1718214462553 } from './company/1718214462553-CreateCompanyTable';
 import { CreateEmployeeTable1720471263659 } from './employee/1720471263659-CreateEmployeeTable';
 import { CreateAdressTable1720647166251 } from './address/1720647166251-CreateAdressTable';
 import { CreateProjectTable1720647957624 } from './project/1720647957624-CreateProjectTable';
-import { CreateCompanyTypeTable1720716678201 } from './company/1720716678201-CreateCompanyTypeTable';
 
 export const dataSource = new DataSource({
   type: 'mysql',
@@ -31,7 +29,6 @@ export const dataSource = new DataSource({
   logging: true,
   entities: [
     Company,
-    CompanyType,
     Users,
     Address,
     Asset,
@@ -52,6 +49,5 @@ export const dataSource = new DataSource({
     CreateEmployeeTable1720471263659,
     CreateAdressTable1720647166251,
     CreateProjectTable1720647957624,
-    CreateCompanyTypeTable1720716678201,
   ],
 });

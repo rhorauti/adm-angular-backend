@@ -19,21 +19,36 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
           {
+            name: 'type',
+            type: 'int',
+          },
+          {
             name: 'nickname',
             type: 'char',
             length: '50',
-            isUnique: true,
           },
           {
             name: 'name',
             type: 'varchar',
             length: '100',
-            isUnique: true,
           },
           {
             name: 'cnpj',
             type: 'char',
             length: '20',
+            isNullable: true,
+          },
+          {
+            name: 'ie',
+            type: 'char',
+            length: '50',
+            isNullable: true,
+          },
+          {
+            name: 'im',
+            type: 'char',
+            length: '50',
+            isNullable: true,
             isUnique: true,
           },
         ],
