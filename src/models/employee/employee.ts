@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Company } from '../company/company';
 import { Address } from '@models/adress/address';
 import { EmployeeContract } from './employeeContract';
@@ -31,6 +39,7 @@ export class Employee {
   cellphone: string;
 
   @ManyToOne(() => Company, company => company.employee, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id_Company' })
   company: Company;
 
   @OneToOne(() => Address, adress => adress.employee, { nullable: true })

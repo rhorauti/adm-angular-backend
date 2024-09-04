@@ -7,7 +7,7 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
         name: 'Address',
         columns: [
           {
-            name: 'idAdress',
+            name: 'idAddress',
             type: 'int',
             isPrimary: true,
             isGenerated: true,

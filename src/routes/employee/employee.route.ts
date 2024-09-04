@@ -1,13 +1,14 @@
-import { BaseController } from '@controllers/base/base.register.controller';
-import { Employee } from '@models/employee/employee';
+import { EmployeeController } from '@controllers/employee/employee.controller';
 import Router from 'express';
 import { container } from 'tsyringe';
 
 const employeeRoute = Router();
 const version = 'v1';
 
-const employeeController = container.resolve<BaseController>('BaseController<Employee>');
+const employeeController = container.resolve(EmployeeController);
 
-employeeRoute.get(`/${version}/employee/:id`, (request, response) => {
-  employeeController.getList(request, response, 'id_Employee');
+employeeRoute.get(`/${version}/employee`, (request, response) => {
+  employeeController.getEmployeeList(request, response);
 });
+
+export { employeeRoute };

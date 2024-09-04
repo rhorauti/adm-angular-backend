@@ -11,7 +11,7 @@ export class Address {
   type: string;
 
   @Column({ type: 'varchar', length: 150 })
-  adress: string;
+  address: string;
 
   @Column({ type: 'int' })
   number: number;

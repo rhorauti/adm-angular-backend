@@ -1,7 +1,9 @@
 import { dataSource } from '@migrations/index';
 import { ICompanyDTO } from '../../core/interfaces/ICompany';
 import { Company } from '@models/company/company';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class CompanyRepository {
   private companyRepository = dataSource.getRepository(Company);
 

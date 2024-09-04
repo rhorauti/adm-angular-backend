@@ -1,14 +1,14 @@
-import { BaseController } from '@controllers/base/base.register.controller';
+import { AddressController } from '@controllers/address/address.controller';
 import Router from 'express';
 import { container } from 'tsyringe';
 
 const addressRoute = Router();
 const version = 'v1';
 
-const addressController = container.resolve<BaseController>('BaseController<Address>');
+const addressController = container.resolve(AddressController);
 
-addressRoute.get(`/${version}/address/:id`, (request, response) => {
-  addressController.getList(request, response, 'id_Address');
+addressRoute.get(`/${version}/address`, (request, response) => {
+  addressController.getAddressList(response);
 });
 
 export { addressRoute };
