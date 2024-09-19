@@ -6,13 +6,15 @@ import 'reflect-metadata';
 import './containers';
 import { router } from './routes';
 import swaggerUi from 'swagger-ui-express';
-import swaggerFile from './swagger.json';
+import { swaggerTemplate } from './swagger';
+import { handleErrorMiddleware } from './middlewares/error';
 
-const app = express();
+export const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerTemplate));
 app.use(router);
+app.use(handleErrorMiddleware);
 
 dataSource
   .initialize()

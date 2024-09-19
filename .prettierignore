@@ -2,4 +2,5 @@ node_modules
 /dist
 .prettierrc
 .eslintrc.js
+src/swaggerTemplate.ts
 tsconfig.json

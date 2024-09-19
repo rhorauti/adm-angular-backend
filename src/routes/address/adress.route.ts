@@ -11,4 +11,8 @@ addressRoute.get(`/${version}/address`, (request, response) => {
   addressController.getAddressList(response);
 });
 
+addressRoute.post(`/${version}/address`, (request, response) => {
+  addressController.addAddress(request, response);
+});
+
 export { addressRoute };

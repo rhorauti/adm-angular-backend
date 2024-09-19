@@ -1,7 +1,8 @@
 import { dataSource } from '@migrations/index';
 import { Company } from '@models/company/company';
 import { CompanyRepository } from '@repositories/company/company.respository';
-import { Request, Response } from 'express';
+import { CustomError } from '@src/middlewares/error';
+import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { Brackets, QueryRunner } from 'typeorm';
 
@@ -9,16 +10,13 @@ import { Brackets, QueryRunner } from 'typeorm';
 export class CompanyController {
   constructor(@inject('CompanyRepository') private companyRepository: CompanyRepository) {}
 
-  async getCompanyList(request: Request, response: Response): Promise<Response> {
-    const companiesList = await this.companyRepository.getAllCompanies(
-      Number(request.params.companyType),
-    );
-    if (!companiesList) {
-      return response.status(400).json({
-        status: false,
-        message: 'Nenhum registro encontrando!',
-      });
-    } else {
+  async getCompanyList(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<Response> {
+    try {
+      const companiesList = await this.companyRepository.getAllCompanies();
       companiesList.sort((a, b) => {
         if (a.idCompany > b.idCompany) {
           return -1;
@@ -27,57 +25,62 @@ export class CompanyController {
       return response.status(200).json({
         date: new Date(),
         status: true,
-        message: 'Lista recebida com sucesso!',
+        msg: 'Lista recebida com sucesso!',
         data: companiesList,
       });
+    } catch (error) {
+      next(error);
     }
   }
 
-  async addNewCompany(request: Request, response: Response): Promise<Response> {
+  async addNewCompany(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
     const queryRunner: QueryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      const { nickname, name, cnpj, ie, im, type } = request.body[0];
+
       const existingCompany = await queryRunner.manager
         .createQueryBuilder(Company, 'company')
         .where(
           new Brackets(qb => {
-            qb.where('company.nickname = :nickname', { nickname: request.body.nickname }).andWhere(
-              'company.type = :type',
-              { type: Number(request.body.type) },
-            );
+            qb.where('company.nickname = :nickname', {
+              nickname: nickname,
+            }).andWhere('company.type = :type', { type: type });
           }),
         )
         .orWhere(
           new Brackets(qb => {
-            qb.where('company.name = :name', { name: request.body.name }).andWhere(
-              'company.type = :type',
-              { type: Number(request.body.type) },
-            );
+            qb.where('company.name = :name', { name: name }).andWhere('company.type = :type', {
+              type: type,
+            });
           }),
         )
         .orWhere(
           new Brackets(qb => {
-            qb.where('company.cnpj = :cnpj', { cnpj: request.body.cnpj }).andWhere(
-              'company.type = :type',
-              { type: Number(request.body.type) },
-            );
+            qb.where('company.cnpj = :cnpj', { cnpj: cnpj }).andWhere('company.type = :type', {
+              type: type,
+            });
           }),
         )
         .orWhere(
           new Brackets(qb => {
-            qb.where('company.ie = :ie', { ie: request.body.ie })
+            qb.where('company.ie = :ie', { ie: ie })
               .andWhere('company.type = :type', {
-                type: Number(request.body.type),
+                type: type,
               })
               .andWhere('company.ie <> ""');
           }),
         )
         .orWhere(
           new Brackets(qb => {
-            qb.where('company.im = :im', { im: request.body.im })
+            qb.where('company.im = :im', { im: im })
               .andWhere('company.type = :type', {
-                type: Number(request.body.type),
+                type: type,
               })
               .andWhere('company.ie <> ""');
           }),
@@ -85,70 +88,112 @@ export class CompanyController {
         .getOne();
       if (existingCompany) {
         await queryRunner.rollbackTransaction();
-        let message = 'A empresa já existe com o mesmo ';
-        if (existingCompany.nickname == request.body.nickname)
-          message += `nickname: ${existingCompany.nickname}`;
-        else if (existingCompany.name == request.body.name)
-          message += `nome: ${existingCompany.name}`;
-        else if (existingCompany.cnpj == request.body.cnpj)
-          message += `CNPJ: ${existingCompany.cnpj}`;
-        else if (existingCompany.ie == request.body.ie)
-          message += `Inscrição Estadual: ${existingCompany.ie}`;
-        else if (existingCompany.im == request.body.im)
-          message += `Inscrição Municipal: ${existingCompany.im}`;
-        return response.status(401).json({
-          status: false,
-          message: message,
-        });
+        let msg = 'A empresa já existe com o mesmo ';
+        if (existingCompany.nickname.trim().toLowerCase() == nickname.trim().toLowerCase())
+          msg += `nickname: ${existingCompany.nickname}`;
+        else if (existingCompany.name.trim().toLowerCase() == name.trim().toLowerCase())
+          msg += `nome: ${existingCompany.name}`;
+        else if (existingCompany.cnpj.trim().toLowerCase() == cnpj.trim().toLowerCase())
+          msg += `CNPJ: ${existingCompany.cnpj}`;
+        else if (existingCompany.ie.trim().toLowerCase() == ie.trim().trim().toLowerCase())
+          msg += `Inscrição Estadual: ${existingCompany.ie}`;
+        else if (existingCompany.im.trim().toLowerCase() == im.trim().toLowerCase())
+          msg += `Inscrição Municipal: ${existingCompany.im}`;
+        const error = new Error(msg) as CustomError;
+        error.statusCode = 400;
+        return next(error);
       }
-      request.body.idCompany = null;
-      const newCompany = queryRunner.manager.create(Company, request.body);
-      const savedCompany = await queryRunner.manager.save(newCompany);
+      if (ie == '') request.body[0].ie = null;
+      if (im == '') request.body[0].im = null;
+
+      const company = queryRunner.manager.create(Company, request.body[0]);
+      const savedCompany = await queryRunner.manager.save(company);
 
       await queryRunner.commitTransaction();
 
       return response.status(200).json({
         status: true,
-        message: `Empresa ${savedCompany.name} registrada com sucesso!`,
+        msg: `Empresa ${savedCompany.name} registrada com sucesso!`,
         data: savedCompany,
       });
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      return response.status(500).json({
-        status: false,
-        message: 'Erro interno do servidor!',
-        error: error.message,
-      });
+      return next(error);
     } finally {
       await queryRunner.release();
     }
   }
 
-  async updateCompany(request: Request, response: Response): Promise<Response> {
-    const idCompany = Number(request.params.idCompany);
-    const company = await this.companyRepository.findCompanyById(idCompany);
-    const companyResponse = await this.companyRepository.saveCompany(request.body);
-    if (!companyResponse) {
-      return response.status(500).json({
-        status: false,
-        message: 'Erro interno do servidor',
-      });
-    } else {
+  async checkExistingCompany(request: Request, next: NextFunction): Promise<Response | void> {
+    const { nickname, name, cnpj, ie, im, type, idCompany } = request.body[0];
+    if (ie == '') request.body[0].ie = null;
+    if (im == '') request.body[0].im = null;
+    const companiesList = await this.companyRepository.getAllCompanies();
+    let error: CustomError | null = null;
+    console.log('request.body', request.body[0], ie != null, im != null);
+    companiesList.forEach(company => {
+      if (company.idCompany != idCompany && company.nickname == nickname && company.type == type) {
+        error = new Error('Outra empresa já existe com o mesmo apelido') as CustomError;
+      } else if (company.idCompany != idCompany && company.name == name && company.type == type) {
+        error = new Error('Outra empresa já existe com o mesmo nome') as CustomError;
+      } else if (company.idCompany != idCompany && company.cnpj == cnpj && company.type == type) {
+        error = new Error('Outra empresa já existe com o mesmo cnpj') as CustomError;
+      } else if (
+        company.idCompany != idCompany &&
+        ie != null &&
+        ie != '' &&
+        company.ie == ie &&
+        company.type == type
+      ) {
+        error = new Error('Outra empresa já existe com a mesma inscrição estadual') as CustomError;
+      } else if (
+        company.idCompany != idCompany &&
+        im != null &&
+        im != '' &&
+        company.im == im &&
+        company.type == type
+      ) {
+        error = new Error('Outra empresa já existe com a mesma inscrição municipal') as CustomError;
+      }
+      if (error) {
+        error.statusCode = 400;
+        return next(error);
+      }
+    });
+  }
+
+  async updateCompany(request: Request, response: Response, next: NextFunction): Promise<Response> {
+    try {
+      this.checkExistingCompany(request, next);
+      const idCompany = Number(request.params.idCompany);
+      const company = await this.companyRepository.findCompanyById(idCompany);
+      if (request.body[0].ie == '') request.body[0].ie = null;
+      if (request.body[0].im == '') request.body[0].im = null;
+      await this.companyRepository.saveCompany(request.body[0]);
       return response.status(200).json({
         status: true,
-        message: `Empresa ${(company as Company).name} alterada com sucesso!`,
+        msg: `Empresa ${(company as Company).name} alterada com sucesso!`,
         data: company,
       });
+    } catch (error) {
+      next(error);
     }
   }
 
-  async deleteCompany(request: Request, response: Response): Promise<Response> {
-    const idCompany = Number(request.params.idCompany);
-    const company = await this.companyRepository.findCompanyById(idCompany);
-    await this.companyRepository.deleteCompany(company);
-    return response.status(200).json({
-      status: true,
-      message: `Empresa ${company.name} excluida com sucesso!`,
-    });
+  // verificar
+  async deleteCompany(request: Request, response: Response, next: NextFunction): Promise<Response> {
+    try {
+      const idCompany = Number(request.params.idCompany);
+      console.log('idCompany', idCompany);
+      const company = await this.companyRepository.findCompanyById(idCompany);
+      console.log('companydelete', company);
+      await this.companyRepository.deleteCompany(idCompany);
+      return response.status(200).json({
+        status: true,
+        msg: `Empresa ${company.name} excluida com sucesso!`,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { CompanyController } from '@controllers/company/company.controller';
-import Router from 'express';
+import Router, { NextFunction, Request, Response } from 'express';
+import { body, validationResult } from 'express-validator';
 import { container } from 'tsyringe';
 
 const companyRoute = Router();
@@ -7,20 +8,59 @@ const version = 'v1';
 
 const companyController = container.resolve(CompanyController);
 
-companyRoute.get(`/${version}/company/:companyType`, (request, response) => {
-  companyController.getCompanyList(request, response);
-});
+const createBodyChain = () => {
+  return [
+    body('[0].type').notEmpty().isNumeric().withMessage('Informe um valor válido!'),
+    body('[0].nickname').notEmpty().withMessage('O campo nickname não pode estar vazio!'),
+    body('[0].name').notEmpty().withMessage('O campo nome da empresa não pode estar vazio!'),
+    body('[0].cnpj').notEmpty().withMessage('O campo CNPJ não pode estar vazio!'),
+  ];
+};
 
-companyRoute.post(`/${version}/company/:companyType`, (request, response) => {
-  companyController.addNewCompany(request, response);
-});
+companyRoute.get(
+  `/${version}/company`,
+  (request: Request, response: Response, next: NextFunction) => {
+    companyController.getCompanyList(request, response, next);
+  },
+);
 
-companyRoute.put(`/${version}/company/:idCompany`, (request, response) => {
-  companyController.updateCompany(request, response);
-});
+companyRoute.post(
+  `/${version}/company`,
+  createBodyChain(),
+  (request: Request, response: Response, next: NextFunction) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      const firstErrorMessage = errors.array()[0].msg;
+      return response.status(400).json({ status: false, msg: firstErrorMessage });
+    }
+    next();
+  },
+  (request: Request, response: Response, next: NextFunction) => {
+    companyController.addNewCompany(request, response, next);
+  },
+);
 
-companyRoute.delete(`/${version}/company/:idCompany`, (request, response) => {
-  companyController.deleteCompany(request, response);
-});
+companyRoute.put(
+  `/${version}/company/:idCompany`,
+  createBodyChain(),
+  (request: Request, response: Response, next: NextFunction) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      const firstErrorMessage = errors.array()[0].msg;
+      return response.status(400).json({ status: false, msg: firstErrorMessage });
+    }
+    next();
+  },
+  (request: Request, response: Response, next: NextFunction) => {
+    companyController.updateCompany(request, response, next);
+  },
+);
+
+companyRoute.delete(
+  `/${version}/company/:idCompany`,
+  (request: Request, response: Response, next: NextFunction) => {
+    companyController.deleteCompany(request, response, next);
+  },
+);
 
 export { companyRoute };

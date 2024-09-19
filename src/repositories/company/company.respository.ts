@@ -7,16 +7,26 @@ import { injectable } from 'tsyringe';
 export class CompanyRepository {
   private companyRepository = dataSource.getRepository(Company);
 
-  async getAllCompanies(companyType: number): Promise<Company[]> {
-    return await this.companyRepository
-      .createQueryBuilder('company')
-      .where('company.type = :type', { type: companyType })
-      .getMany();
+  async getAllCompanies(): Promise<Company[]> {
+    return await this.companyRepository.find();
   }
+
+  // async getAllCompanies(companyType: number): Promise<Company[]> {
+  //   return await this.companyRepository
+  //     .createQueryBuilder('company')
+  //     .where('company.type = :type', { type: companyType })
+  //     .getMany();
+  // }
 
   async findCompanyById(id: number): Promise<Company> {
     return await this.companyRepository.findOne({
       where: { idCompany: id },
+    });
+  }
+
+  async findCompanyByName(name: string): Promise<Company> {
+    return await this.companyRepository.findOne({
+      where: { name: name },
     });
   }
 
@@ -29,7 +39,7 @@ export class CompanyRepository {
     return await this.companyRepository.save(data);
   }
 
-  async deleteCompany(company: Company): Promise<void> {
-    await this.companyRepository.delete(company);
+  async deleteCompany(idCompany: number): Promise<void> {
+    await this.companyRepository.delete(idCompany);
   }
 }

@@ -4,5 +4,5 @@
   "singleQuote": true,
   "printWidth": 100,
   "arrowParens": "avoid",
-  "ignore": [".eslintrc.js"]
+  "ignore": [".eslintrc.js, .swagger"]
 }
