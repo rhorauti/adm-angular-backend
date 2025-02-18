@@ -42,7 +42,7 @@ export class CompanyController {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const { nickname, name, cnpj, ie, im, type } = request.body[0];
+      const { nickname, name, cnpj, ie, im, type } = request.body;
 
       const existingCompany = await queryRunner.manager
         .createQueryBuilder(Company, 'company')
@@ -103,10 +103,10 @@ export class CompanyController {
         error.statusCode = 400;
         return next(error);
       }
-      if (ie == '') request.body[0].ie = null;
-      if (im == '') request.body[0].im = null;
+      if (ie == '') request.body.ie = null;
+      if (im == '') request.body.im = null;
 
-      const company = queryRunner.manager.create(Company, request.body[0]);
+      const company = queryRunner.manager.create(Company, request.body);
       const savedCompany = await queryRunner.manager.save(company);
 
       await queryRunner.commitTransaction();
@@ -125,12 +125,11 @@ export class CompanyController {
   }
 
   async checkExistingCompany(request: Request, next: NextFunction): Promise<Response | void> {
-    const { nickname, name, cnpj, ie, im, type, idCompany } = request.body[0];
-    if (ie == '') request.body[0].ie = null;
-    if (im == '') request.body[0].im = null;
+    const { nickname, name, cnpj, ie, im, type, idCompany } = request.body;
+    if (ie == '') request.body.ie = null;
+    if (im == '') request.body.im = null;
     const companiesList = await this.companyRepository.getAllCompanies();
     let error: CustomError | null = null;
-    console.log('request.body', request.body[0], ie != null, im != null);
     companiesList.forEach(company => {
       if (company.idCompany != idCompany && company.nickname == nickname && company.type == type) {
         error = new Error('Outra empresa já existe com o mesmo apelido') as CustomError;
@@ -167,9 +166,9 @@ export class CompanyController {
       this.checkExistingCompany(request, next);
       const idCompany = Number(request.params.idCompany);
       const company = await this.companyRepository.findCompanyById(idCompany);
-      if (request.body[0].ie == '') request.body[0].ie = null;
-      if (request.body[0].im == '') request.body[0].im = null;
-      await this.companyRepository.saveCompany(request.body[0]);
+      if (request.body.ie == '') request.body.ie = null;
+      if (request.body.im == '') request.body.im = null;
+      await this.companyRepository.saveCompany(request.body);
       return response.status(200).json({
         status: true,
         msg: `Empresa ${(company as Company).name} alterada com sucesso!`,
@@ -180,13 +179,11 @@ export class CompanyController {
     }
   }
 
-  // verificar
   async deleteCompany(request: Request, response: Response, next: NextFunction): Promise<Response> {
     try {
+      console.log('request.params.idCompany', request.params.idCompany);
       const idCompany = Number(request.params.idCompany);
-      console.log('idCompany', idCompany);
       const company = await this.companyRepository.findCompanyById(idCompany);
-      console.log('companydelete', company);
       await this.companyRepository.deleteCompany(idCompany);
       return response.status(200).json({
         status: true,

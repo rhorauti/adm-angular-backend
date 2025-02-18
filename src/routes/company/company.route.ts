@@ -10,16 +10,17 @@ const companyController = container.resolve(CompanyController);
 
 const createBodyChain = () => {
   return [
-    body('[0].type').notEmpty().isNumeric().withMessage('Informe um valor válido!'),
-    body('[0].nickname').notEmpty().withMessage('O campo nickname não pode estar vazio!'),
-    body('[0].name').notEmpty().withMessage('O campo nome da empresa não pode estar vazio!'),
-    body('[0].cnpj').notEmpty().withMessage('O campo CNPJ não pode estar vazio!'),
+    body('type').notEmpty().isNumeric().withMessage('Informe um valor válido!'),
+    body('nickname').notEmpty().withMessage('O campo nickname não pode estar vazio!'),
+    body('name').notEmpty().withMessage('O campo nome da empresa não pode estar vazio!'),
+    body('cnpj').notEmpty().withMessage('O campo CNPJ não pode estar vazio!'),
   ];
 };
 
 companyRoute.get(
   `/${version}/company`,
   (request: Request, response: Response, next: NextFunction) => {
+    console.log(request.body);
     companyController.getCompanyList(request, response, next);
   },
 );

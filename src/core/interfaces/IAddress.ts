@@ -1,10 +1,15 @@
 export interface IAddress {
   idAddress: number;
-  type: string;
+  nickname: string;
+  isDelivery: number;
+  isBilling: number;
+  postalCode: string;
   address: string;
-  number: number;
-  complement: string;
-  district: string;
-  city: string;
-  state: string;
+  number?: string;
+  complement?: string;
+  district?: string;
+  city?: string;
+  state?: string;
+  id_Company: number;
+  id_Employee?: number;
 }

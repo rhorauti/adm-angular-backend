@@ -10,7 +10,7 @@ import { Production } from '@models/production/production';
 import { Project } from '@models/project/project';
 import { ProjectEvent } from '@models/project/projectEvent';
 import { PurchasingOrder } from '@models/purchasing-order/purchasingOrder';
-import { Address } from '@models/adress/address';
+import { Address } from '@src/models/address/address';
 import { Asset } from '@models/asset/asset';
 import { ProjectCompany } from '@models/project/project_company';
 import { CreateUsersTable1703816465329 } from './auth/1703816465329-CreateUsersTable';

@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Timestamp,
 } from 'typeorm';
-import { Address } from '@models/adress/address';
+import { Address } from '@src/models/address/address';
 import { Employee } from '@models/employee/employee';
 import { Asset } from '@models/asset/asset';
 import { ProjectCompany } from '@models/project/project_company';
@@ -19,9 +19,6 @@ import { PurchasingOrder } from '@models/purchasing-order/purchasingOrder';
 export class Company {
   @PrimaryGeneratedColumn()
   idCompany: number;
-
-  @CreateDateColumn()
-  date: Timestamp;
 
   @Column({ type: 'int' })
   type: number;

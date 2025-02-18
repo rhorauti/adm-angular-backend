@@ -14,11 +14,6 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'date',
-            type: 'timestamp',
-            default: 'CURRENT_TIMESTAMP',
-          },
-          {
             name: 'type',
             type: 'int',
           },
@@ -37,12 +32,14 @@ export class CreateCompanyTable1718214462553 implements MigrationInterface {
             type: 'char',
             length: '20',
             isNullable: true,
+            isUnique: true,
           },
           {
             name: 'ie',
             type: 'char',
             length: '50',
             isNullable: true,
+            isUnique: true,
           },
           {
             name: 'im',

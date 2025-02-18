@@ -1,7 +1,6 @@
 import { IAddress } from '@core/interfaces/IAddress';
 import { dataSource } from '@migrations/index';
-import { Address } from '@models/adress/address';
-import { Company } from '@models/company/company';
+import { Address } from '@src/models/address/address';
 import { injectable } from 'tsyringe';
 
 @injectable()
@@ -18,22 +17,23 @@ export class AddressRepository {
     });
   }
 
-  async checkRegisterAlreadyExist(addressInfo: IAddress, company: Company): Promise<Address> {
+  async checkRegisterAlreadyExist(addressInfo: IAddress): Promise<Address> {
     return await this.addressRepository.findOne({
       where: {
-        type: addressInfo.type,
+        nickname: addressInfo.nickname,
+        postalCode: addressInfo.postalCode,
         address: addressInfo.address,
         number: addressInfo.number,
         complement: addressInfo.complement,
         district: addressInfo.district,
         city: addressInfo.city,
-        company: company,
+        company: { idCompany: addressInfo.id_Company },
       },
     });
   }
 
   async saveAddress(data: IAddress): Promise<Address> {
-    return await this.addressRepository.save(data);
+    return await this.addressRepository.save({ ...data, company: { idCompany: data.id_Company } });
   }
 
   async deleteAddress(id: number): Promise<void> {

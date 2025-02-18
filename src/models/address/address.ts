@@ -8,24 +8,33 @@ export class Address {
   idAddress: number;
 
   @Column({ type: 'char', length: 15 })
-  type: string;
+  nickname: string;
+
+  @Column({ type: 'int' })
+  isDelivery: number;
+
+  @Column({ type: 'int' })
+  isBilling: number;
+
+  @Column({ type: 'char', length: 15 })
+  postalCode: string;
 
   @Column({ type: 'varchar', length: 150 })
   address: string;
 
-  @Column({ type: 'int' })
-  number: number;
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  number: string;
 
   @Column({ type: 'char', length: 50, nullable: true })
   complement: string;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 50, nullable: true })
   district: string;
 
-  @Column({ type: 'char', length: 50 })
+  @Column({ type: 'char', length: 50, nullable: true })
   city: string;
 
-  @Column({ type: 'varchar', length: 2 })
+  @Column({ type: 'varchar', length: 2, nullable: true })
   state: string;
 
   @ManyToOne(() => Company, company => company.adress, { nullable: true, onDelete: 'CASCADE' })

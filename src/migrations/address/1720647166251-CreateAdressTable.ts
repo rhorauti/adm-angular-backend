@@ -14,7 +14,20 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'type',
+            name: 'nickname',
+            type: 'char',
+            length: '15',
+          },
+          {
+            name: 'isDelivery',
+            type: 'int',
+          },
+          {
+            name: 'isBilling',
+            type: 'int',
+          },
+          {
+            name: 'postalCode',
             type: 'char',
             length: '50',
           },
@@ -25,7 +38,9 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
           },
           {
             name: 'number',
-            type: 'int',
+            type: 'char',
+            length: '50',
+            isNullable: true,
           },
           {
             name: 'complement',
@@ -37,16 +52,19 @@ export class CreateAdressTable1720647166251 implements MigrationInterface {
             name: 'district',
             type: 'char',
             length: '50',
+            isNullable: true,
           },
           {
             name: 'city',
             type: 'char',
             length: '50',
+            isNullable: true,
           },
           {
             name: 'state',
             type: 'char',
             length: '20',
+            isNullable: true,
           },
           {
             name: 'id_Company',

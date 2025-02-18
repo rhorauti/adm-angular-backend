@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Company } from '../company/company';
-import { Address } from '@models/adress/address';
+import { Address } from '@src/models/address/address';
 import { EmployeeContract } from './employeeContract';
 import { EmployeeVacation } from './employeeVacation';
 
@@ -20,7 +20,7 @@ export class Employee {
   @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
-  @Column({ type: 'char', length: 14, nullable: true })
+  @Column({ type: 'char', length: 14, unique: true, nullable: true })
   cpf: string;
 
   @Column({ type: 'char', length: 50, nullable: true })

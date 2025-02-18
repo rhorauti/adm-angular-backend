@@ -63,10 +63,7 @@ export class AuthController {
    * @returns Resposta com o status, mensagem e dados do usuário.
    */
   async createNewUser(request: Request, response: Response): Promise<Response> {
-    console.log(request.body);
-    console.log(this.authRepository);
     const userExists = await this.authRepository.findUserByEmail(request.body.email);
-    console.log(userExists);
     if (userExists) {
       return response.status(401).json({
         status: false,
