@@ -37,29 +37,14 @@ companyRoute.post(
     next();
   },
   (request: Request, response: Response, next: NextFunction) => {
-    companyController.addNewCompany(request, response, next);
+    companyController.saveCompany(request, response, next);
   },
 );
 
-companyRoute.put(
-  `/${version}/company/:idCompany`,
-  createBodyChain(),
+companyRoute.post(
+  `/${version}/company/delete`,
   (request: Request, response: Response, next: NextFunction) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-      const firstErrorMessage = errors.array()[0].msg;
-      return response.status(400).json({ status: false, msg: firstErrorMessage });
-    }
-    next();
-  },
-  (request: Request, response: Response, next: NextFunction) => {
-    companyController.updateCompany(request, response, next);
-  },
-);
-
-companyRoute.delete(
-  `/${version}/company/:idCompany`,
-  (request: Request, response: Response, next: NextFunction) => {
+    console.log('route', request.body);
     companyController.deleteCompany(request, response, next);
   },
 );

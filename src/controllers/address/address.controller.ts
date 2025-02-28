@@ -77,7 +77,6 @@ export class AddressController {
     try {
       const idAddress = Number(request.params.idAddress);
       const address = await this.addressRepository.findAddressById(idAddress);
-      console.log('address', address);
       await this.addressRepository.deleteAddress(idAddress);
       return response.status(200).json({
         status: true,

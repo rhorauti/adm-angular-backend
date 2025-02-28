@@ -2,6 +2,7 @@ import { dataSource } from '@migrations/index';
 import { ICompanyDTO } from '../../core/interfaces/ICompany';
 import { Company } from '@models/company/company';
 import { injectable } from 'tsyringe';
+import { Brackets } from 'typeorm';
 
 @injectable()
 export class CompanyRepository {
@@ -11,23 +12,32 @@ export class CompanyRepository {
     return await this.companyRepository.find();
   }
 
-  // async getAllCompanies(companyType: number): Promise<Company[]> {
-  //   return await this.companyRepository
-  //     .createQueryBuilder('company')
-  //     .where('company.type = :type', { type: companyType })
-  //     .getMany();
-  // }
-
-  async findCompanyById(id: number): Promise<Company> {
+  async findCompanyByField(field: keyof Company, value: string | number): Promise<Company> {
     return await this.companyRepository.findOne({
-      where: { idCompany: id },
+      where: { [field]: value },
     });
   }
 
-  async findCompanyByName(name: string): Promise<Company> {
-    return await this.companyRepository.findOne({
-      where: { name: name },
-    });
+  async checkExistingRegister(data: ICompanyDTO): Promise<Company | null> {
+    if (data.ie == '') data.ie = null;
+    if (data.im == '') data.im = null;
+    const query = this.companyRepository
+      .createQueryBuilder('company')
+      .where('company.type = :type', { type: data.type })
+      .andWhere(
+        new Brackets(qb => {
+          qb.where('company.nickname = :nickname', { nickname: data.nickname })
+            .orWhere('company.name = :name', { name: data.name })
+            .orWhere('company.cnpj = :cnpj', { cnpj: data.cnpj });
+          if (data.ie && data.ie.length > 0) {
+            qb.orWhere('company.ie = :ie AND company.ie IS NOT NULL', { ie: data.ie });
+          }
+          if (data.im && data.im.length > 0) {
+            qb.orWhere('company.im = :im AND company.im IS NOT NULL', { im: data.im });
+          }
+        }),
+      );
+    return query.getOne();
   }
 
   /**
